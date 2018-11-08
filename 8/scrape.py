@@ -33,22 +33,26 @@ def create_review_data(url):
         product_id=product_id)
     
     print(url_review)
-    response = requests.get(url_review)
-    bsobj = BeautifulSoup(response.content, "lxml")
-    if bsobj.find("ul", {"class":"number"}):
-        max_page_num = int(bsobj.find("ul", {"class":"number"}).findAll("li")[-1].get_text()) + 1
-    else:
-        max_page_num = 1
-        
-    for review_page in range(0, max_page_num):
-        url_review = 'https://www.cosme.net/product/product_id/{product_id}/reviews/p/{rev_page}'.format(
-            product_id=product_id,
-            rev_page=review_page)
+    try:
         response = requests.get(url_review)
         bsobj = BeautifulSoup(response.content, "lxml")
-        print('-{0}'.format(url_review))
-        get_review_info(url_review, bsobj)
-        time.sleep(2)
+        if bsobj.find("ul", {"class":"number"}):
+            max_page_num = int(bsobj.find("ul", {"class":"number"}).findAll("li")[-1].get_text()) + 1
+        else:
+            max_page_num = 1
+            
+        for review_page in range(0, max_page_num):
+            url_review = 'https://www.cosme.net/product/product_id/{product_id}/reviews/p/{rev_page}'.format(
+                product_id=product_id,
+                rev_page=review_page)
+            response = requests.get(url_review)
+            bsobj = BeautifulSoup(response.content, "lxml")
+            print('-{0}'.format(url_review))
+            get_review_info(url_review, bsobj)
+            time.sleep(2)
+    except:
+        print('error@{0}'.format(url_review))
+
 
 if __name__ == '__main__':
     df_product_links = pd.read_csv('./product_links.csv', sep=',').iloc[:,1]
