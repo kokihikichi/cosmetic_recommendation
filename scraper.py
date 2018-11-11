@@ -24,7 +24,7 @@ def get_review_info(url_review, bsobj):
             reviewer_score = reviewer_body.find("p", {"class": re.compile("reviewer-rating.*")}).get_text()
             reviewer_tags = reviewer_body.find("div", {"class": "tag-list clearfix"})
             DF_REVIEWS = DF_REVIEWS.append(pd.DataFrame([[product_id, reviewer_id, reviewer_info, reviewer_score, reviewer_tags]]))
-        except Exception e:
+        except Exception as e:
             print('error: {0}'.format(e))
 
 def create_review_data(row):
@@ -59,5 +59,5 @@ def create_review_data(row):
             f.write(DF_REVIEWS.to_csv(sep='\t', header=False))
         with open('pointer.csv', 'w+') as f:
             f.write(str(url_num))
-    except Exception e:
+    except Exception as e:
         print('error: {0}'.format(e))
