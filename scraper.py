@@ -30,7 +30,6 @@ def get_review_info(url_review, bsobj):
 def create_review_data(row):
     global DF_REVIEWS
     try:
-        DF_REVIEWS = pd.DataFrame()
         url_num = row[0]
         print(url_num)
         url = row[1]
@@ -47,6 +46,7 @@ def create_review_data(row):
             max_page_num = 1
 
         for review_page in range(0, max_page_num):
+            DF_REVIEWS = pd.DataFrame()
             url_review = 'https://www.cosme.net/product/product_id/{product_id}/reviews/p/{rev_page}'.format(
                 product_id=product_id,
                 rev_page=review_page)
@@ -55,8 +55,8 @@ def create_review_data(row):
             print('-{0}'.format(url_review))
             get_review_info(url_review, bsobj)
             time.sleep(2)
-        with open('reviews.csv', 'a+') as f:
-            f.write(DF_REVIEWS.to_csv(sep='\t', header=False))
+            with open('reviews.csv', 'a+') as f:
+                f.write(DF_REVIEWS.to_csv(sep='\t', header=False))
         with open('pointer.csv', 'w+') as f:
             f.write(str(url_num))
     except Exception as e:
